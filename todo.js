@@ -13,5 +13,16 @@ function adduser() {
     const classcountElement = document.getElementById("classcount");
     classcountElement.innerHTML = '未完了のタスク:' + classcount;
 // No.80 add end
+// No.81.1 add end
+    adduser.className = "completed-todo-item";
+    classChange();
+// No.81.1 add start
 }
 // No.78 add end
+// No.81.2 add start
+function classChange() {
+    const classcount = document.getElementsByClassName("completed-todo-item").length;
+    const classcountElement = document.getElementById("classcount");
+    classcountElement.innerHTML = '未完了のタスク:' + classcount;
+}
+// No.81.2 add end
