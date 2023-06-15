@@ -1,7 +1,7 @@
 // No.78 add start
 function adduser() {
     const username = document.getElementById("username");
-    let adduser = document.createElement("div");
+    const adduser = document.createElement("div");
     adduser.className = "todo-item";
     adduser.innerText = username.value;
     document.body.appendChild(adduser);
