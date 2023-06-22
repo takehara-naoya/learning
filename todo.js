@@ -19,6 +19,11 @@ function addtodo() {
     todoItem.setAttribute("onclick", "completedtask(this)");
     let savedtodo = document.getElementById("stock_todo").innerHTML; //"stock_todo"のHTML要素を取得し、savedtodoに挿入
     localStorage.setItem("todo-key", savedtodo); //localstrageに保存
+    const deleteButton = document.createElement("button"); //削除ボタンの追加
+    deleteButton.innerText = "削除";
+    deleteButton.setAttribute("onclick", "deleteTask(this)"); 
+    todoItem.appendChild(deleteButton);
+    savedtodolocalstorage();
 }
 
 //クラス名が"todo-item"なら"completed-todo-item"を入れ、"completed-todo-item"なら"todo-item"を入れる。
@@ -32,4 +37,22 @@ function completedtask(a) {
    const todocount = document.getElementsByClassName("todo-item").length;
    const todolist = document.getElementById("No.todo");
    todolist.innerHTML = '未完了のタスク:' + todocount;
+}
+
+function deleteTask(b) { //該当タスクを削除した後、タスクの再計算とlocalstrageの更新メソッドを呼ぶ
+    const todoItem = b.parentNode;
+    todoItem.remove();
+    updatetodocount();
+    savedtodolocalstorage();
+}
+
+function updatetodocount() { //タスク数の再計算を行う
+    const todoCount = document.getElementsByClassName("todo-item").length;
+    const todoList = document.getElementById("No.todo");
+    todoList.innerHTML = '未完了のタスク: ' + todoCount;
+}
+
+function savedtodolocalstorage() { //削除によって更新されたlocalstrageを保存
+    const savedtodo = document.getElementById("stock_todo").innerHTML;
+    localStorage.setItem("todo-key", savedtodo);
 }
