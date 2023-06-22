@@ -23,7 +23,6 @@ function addtodo() {
     deleteButton.innerText = "削除";
     deleteButton.setAttribute("onclick", "deleteTask(this)"); 
     todoItem.appendChild(deleteButton);
-    savedtodolocalstorage();
 }
 
 //クラス名が"todo-item"なら"completed-todo-item"を入れ、"completed-todo-item"なら"todo-item"を入れる。
