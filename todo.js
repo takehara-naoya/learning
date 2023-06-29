@@ -77,8 +77,12 @@ function saveTodoLocalstorage() { //削除によって更新されたlocalstrage
 }
 
 function editTask(editButton){ //編集を押したタスクを、編集可能な状態にする
+    const todoItem = editButton.parentNode;
+    const todoName = todoItem.firstChild.textContent; // 編集前のタスク名を取得
     let editNameFiled = document.createElement("input");
     editNameFiled.id = "editData";
+    editNameFiled.value = todoName; //初期表示時に、元タスクを表示
+    editNameFiled.dataset.todoName = todoName; //編集前のタスク名を保存
     let editItem = document.createElement("div"); 
     editItem.className = "editItem";
     editItem.appendChild(editNameFiled); 
@@ -91,6 +95,7 @@ function editTask(editButton){ //編集を押したタスクを、編集可能�
     editCancelButton.setAttribute("onclick", "cancelEdit(this)");
     editItem.appendChild(editCancelButton);
     editButton.parentNode.replaceWith(editItem);
+
 }
 
 function editSave(editEnd){ //タスクの上書きをする
@@ -101,9 +106,11 @@ function editSave(editEnd){ //タスクの上書きをする
     saveTodoLocalstorage();
 }
 
-function cancelEdit(cancelButton) { //取消を押下で編集モードから抜ける
+function cancelEdit(cancelButton) { //取消を押下で編集前のタスクを表示
     const editItem = cancelButton.parentNode;
-    const todoName = editItem.firstChild.value;
+    const todoName = editItem.firstChild.dataset.todoName; //編集前のタスク名を取得
     let todoItem = setForm(todoName);
     editItem.replaceWith(todoItem);
+    updateTodoCount();    
+    saveTodoLocalstorage();
 }
