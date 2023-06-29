@@ -1,57 +1,109 @@
 window.onload = function () { //タブ起動時にlocalstrageを読み込み、データを"stock_todo"に挿入
-    savedtodo = localStorage.getItem("todo-key");
-    document.getElementById("stock_todo").innerHTML = savedtodo;
-    const todocount = document.getElementsByClassName("todo-item").length;
-    const todolist = document.getElementById("No.todo");
-    todolist.innerHTML = '未完了のタスク:' + todocount;
+    savedtodo = localStorage.getItem("todoKey");
+    document.getElementById("stockTodo").innerHTML = savedtodo;
+    const todoCount = document.getElementsByClassName("todoItem").length;
+    const todoList = document.getElementById("numberTodo");
+    todoList.innerHTML = '未完了のタスク:' + todoCount;
 }
 
-function addtodo() {
-    const todonameFiled = document.getElementById("todo-name-Filed");
+function setForm(todoName) { //編集したタスクに名前と各ボタンを付与する
     const todoItem = document.createElement("div");
-    todoItem.className = "todo-item";
-    todoItem.innerText = todonameFiled.value;
-    document.getElementById("stock_todo").appendChild(todoItem); //"stock_todo"に"todo-item"を追加
-    todonameFiled.value = '';
-    const todocount = document.getElementsByClassName("todo-item").length;
-    const todolist = document.getElementById("No.todo");
-    todolist.innerHTML = '未完了のタスク:' + todocount;
+    todoItem.className = "todoItem";
+    todoItem.innerText = todoName;
+    const deleteButton = document.createElement("button"); 
+    deleteButton.innerText = "削除";
+    deleteButton.setAttribute("onclick", "deleteTask(this)"); 
+    todoItem.appendChild(deleteButton);
+    const editButton = document.createElement("button"); 
+    editButton.innerText = "編集";
+    editButton.setAttribute("onclick", "editTask(this)"); 
+    todoItem.appendChild(editButton); 
+    return todoItem;  //実行した値を返す
+}
+
+function addTodo() {
+    const todoNameFiled = document.getElementById("todoNameFiled");
+    const todoItem = document.createElement("div");
+    todoItem.className = "todoItem";
+    todoItem.innerText = todoNameFiled.value;
+    document.getElementById("stockTodo").appendChild(todoItem); //"stockTodo"に"todoItem"を追加
+    todoNameFiled.value = '';
+    const todoCount = document.getElementsByClassName("todoItem").length;
+    const todoList = document.getElementById("numberTodo");
+    todoList.innerHTML = '未完了のタスク:' + todoCount;
     todoItem.setAttribute("onclick", "completedtask(this)");
-    let savedtodo = document.getElementById("stock_todo").innerHTML; //"stock_todo"のHTML要素を取得し、savedtodoに挿入
-    localStorage.setItem("todo-key", savedtodo); //localstrageに保存
+    let saveTodo = document.getElementById("stockTodo").innerHTML; //"stockTodo"のHTML要素を取得し、saveTodoに挿入
+    localStorage.setItem("todoKey", saveTodo); //localstrageに保存
     const deleteButton = document.createElement("button"); //削除ボタンの追加
     deleteButton.innerText = "削除";
     deleteButton.setAttribute("onclick", "deleteTask(this)"); 
     todoItem.appendChild(deleteButton);
+    const editButton = document.createElement("button"); //編集ボタンの追加
+    editButton.innerText = "編集";
+    editButton.setAttribute("onclick", "editTask(this)"); 
+    todoItem.appendChild(editButton);
+    saveTodoLocalstorage();
 }
 
-//クラス名が"todo-item"なら"completed-todo-item"を入れ、"completed-todo-item"なら"todo-item"を入れる。
-function completedtask(a) { 
-   if (a.className == "todo-item") {
-        a.className = "completed-todo-item";
+//クラス名が"todoItem"なら"completeTodoItem"を入れ、"completeTodoItem"なら"todoItem"を入れる。
+function completedtask(todoItem) { 
+   if (todoItem.className == "todoItem") {
+        todoItem.className = "completeTodoItem";
    }
    else {
-        a.className = "todo-item";
+        todoItem.className = "todoItem";
    }
-   const todocount = document.getElementsByClassName("todo-item").length;
-   const todolist = document.getElementById("No.todo");
-   todolist.innerHTML = '未完了のタスク:' + todocount;
+   const todoCount = document.getElementsByClassName("todoItem").length;
+   const todoList = document.getElementById("numberTodo");
+   todoList.innerHTML = '未完了のタスク:' + todoCount;
 }
 
-function deleteTask(b) { //該当タスクを削除した後、タスクの再計算とlocalstrageの更新メソッドを呼ぶ
-    const todoItem = b.parentNode;
+function deleteTask(deleteButton) { //該当タスクを削除した後、タスクの再計算とlocalstrageの更新メソッドを呼ぶ
+    const todoItem = deleteButton.parentNode;
     todoItem.remove();
-    updatetodocount();
-    savedtodolocalstorage();
+    updateTodoCount();
+    saveTodoLocalstorage();
 }
 
-function updatetodocount() { //タスク数の再計算を行う
-    const todoCount = document.getElementsByClassName("todo-item").length;
-    const todoList = document.getElementById("No.todo");
+function updateTodoCount() { //タスク数の再計算を行う
+    const todoCount = document.getElementsByClassName("todoItem").length + document.getElementsByClassName("editItem").length;
+    const todoList = document.getElementById("numberTodo");
     todoList.innerHTML = '未完了のタスク: ' + todoCount;
 }
 
-function savedtodolocalstorage() { //削除によって更新されたlocalstrageを保存
-    const savedtodo = document.getElementById("stock_todo").innerHTML;
-    localStorage.setItem("todo-key", savedtodo);
+function saveTodoLocalstorage() { //削除によって更新されたlocalstrageを保存
+    const saveTodo = document.getElementById("stockTodo").innerHTML;
+    localStorage.setItem("todoKey", saveTodo);
+}
+
+function editTask(editButton){ //編集を押したタスクを、編集可能な状態にする
+    let editNameFiled = document.createElement("input");
+    editNameFiled.id = "editData";
+    let editItem = document.createElement("div"); 
+    editItem.className = "editItem";
+    editItem.appendChild(editNameFiled); 
+    let editSaveButton = document.createElement("button");
+    editSaveButton.innerText = "保存"; 
+    editSaveButton.setAttribute("onclick", "editSave(this)");
+    editItem.appendChild(editSaveButton);
+    let editCancelButton = document.createElement("button");
+    editCancelButton.innerText = "取消";
+    editCancelButton.setAttribute("onclick", "cancelEdit(this)");
+    editItem.appendChild(editCancelButton);
+    editButton.parentNode.replaceWith(editItem);
+}
+
+function editSave(editEnd){ //タスクの上書きをする
+    const editInputName = document.getElementById("editData");
+    let editItem = setForm(editInputName.value);
+    editEnd.parentNode.replaceWith(editItem);
+    updateTodoCount();    
+    saveTodoLocalstorage();
+}
+
+function cancelEdit(cancelButton) { //取消を押下で編集モードから抜ける
+    const editItem = cancelButton.parentNode;
+    const todoName = editItem.firstChild.value;
+    let todoItem = setForm(todoName);
+    editItem.replaceWith(todoItem);
 }
