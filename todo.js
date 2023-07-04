@@ -102,8 +102,10 @@ function editSave(editEnd){ //タスクの上書きをする
     const editInputName = document.getElementById("editData");
     let editItem = setForm(editInputName.value);
     editEnd.parentNode.replaceWith(editItem);
+    editItem.setAttribute("onclick", "completedtask(this)");
     updateTodoCount();    
     saveTodoLocalstorage();
+    
 }
 
 function cancelEdit(cancelButton) { //取消を押下で編集前のタスクを表示
@@ -111,6 +113,8 @@ function cancelEdit(cancelButton) { //取消を押下で編集前のタスクを
     const todoName = editItem.firstChild.dataset.todoName; //編集前のタスク名を取得
     let todoItem = setForm(todoName);
     editItem.replaceWith(todoItem);
-    updateTodoCount();    
+    todoItem.setAttribute("onclick", "completedtask(this)");
+    updateTodoCount();
     saveTodoLocalstorage();
+
 }
